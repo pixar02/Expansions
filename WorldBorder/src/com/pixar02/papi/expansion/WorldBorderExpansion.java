@@ -1,9 +1,7 @@
 package com.pixar02.papi.expansion;
 
-
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-import org.bukkit.Bukkit;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 
