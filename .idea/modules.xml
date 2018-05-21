@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Griefprevention/Griefprevention.iml" filepath="$PROJECT_DIR$/Griefprevention/Griefprevention.iml" />
+      <module fileurl="file://$PROJECT_DIR$/McCombat/McCombat.iml" filepath="$PROJECT_DIR$/McCombat/McCombat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WorldBorder/WorldBorder.iml" filepath="$PROJECT_DIR$/WorldBorder/WorldBorder.iml" />
+    </modules>
+  </component>
+</project>
