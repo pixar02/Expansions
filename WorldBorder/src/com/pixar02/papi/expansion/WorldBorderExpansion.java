@@ -3,6 +3,8 @@ package com.pixar02.papi.expansion;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
+import org.bukkit.Bukkit;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 
 /**
@@ -66,15 +68,39 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String onPlaceholderRequest(Player p, String identifier) {
+        WorldBorder worldBorder = p.getWorld().getWorldBorder();
 
         // %worldborder_size%
         if (identifier.equals("size")) {
-            return String.valueOf(p.getWorld().getWorldBorder().getSize());
+            return String.valueOf(worldBorder.getSize());
         }
+
         // %worldborder_center%
         if (identifier.equals("center")) {
-            return String.valueOf(p.getWorld().getWorldBorder().getCenter());
+            return String.valueOf(worldBorder.getCenter());
         }
+
+        // %worldborder_damage_amount%
+        if (identifier.equals("damage_amount")) {
+            return String.valueOf(worldBorder.getDamageAmount());
+        }
+
+        // %worldborder_damage_buffer%
+        if (identifier.equals("damage_buffer")) {
+            return String.valueOf(worldBorder.getDamageBuffer());
+        }
+
+        // %worldborder_warning_distance%
+        if (identifier.equals("warning_distance")) {
+            return String.valueOf(worldBorder.getWarningDistance());
+        }
+
+        // %worldborder_warning_time%
+        if (identifier.equals("warning_time")) {
+            return String.valueOf(worldBorder.getWarningTime());
+        }
+
+
 
         return null;
     }
