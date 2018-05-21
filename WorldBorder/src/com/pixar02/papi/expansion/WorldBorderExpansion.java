@@ -99,7 +99,6 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
         }
 
 
-
         return null;
     }
 }
