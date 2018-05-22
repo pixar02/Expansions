@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Dropbox/Expansions/PowerRanks.jar!/" />
+          <root url="jar://$USER_HOME$/Dropbox/Expansions/Kredi_v5.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Dropbox/Expansions/PlaceholderAPI-2.8.2.jar!/" />
+          <root url="jar://$USER_HOME$/Dropbox/Expansions/PlaceholderAPI-2.8.7.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
