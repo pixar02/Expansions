@@ -104,6 +104,7 @@ public class CreditExpansion extends PlaceholderExpansion {
         if (p == null) {
             return "";
         }
+
         UUID uuid = p.getUniqueId();
         String name = p.getName();
 

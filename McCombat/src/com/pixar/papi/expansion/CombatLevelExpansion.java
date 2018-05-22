@@ -115,6 +115,7 @@ public class CombatLevelExpansion extends PlaceholderExpansion {
             }
 
         }
+        
         // %combatlevel_XXX%
         if (identifier.equals("XXX")) {
             return "XXX";

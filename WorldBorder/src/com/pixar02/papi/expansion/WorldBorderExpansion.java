@@ -66,6 +66,11 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String onPlaceholderRequest(Player p, String identifier) {
+
+        if (p == null) {
+            return "";
+        }
+
         WorldBorder worldBorder = p.getWorld().getWorldBorder();
 
         // %worldborder_size%
