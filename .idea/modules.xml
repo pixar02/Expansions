@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Griefprevention/Griefprevention.iml" filepath="$PROJECT_DIR$/Griefprevention/Griefprevention.iml" />
       <module fileurl="file://$PROJECT_DIR$/McCombat/McCombat.iml" filepath="$PROJECT_DIR$/McCombat/McCombat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PowerRanks/PowerRanks.iml" filepath="$PROJECT_DIR$/PowerRanks/PowerRanks.iml" />
       <module fileurl="file://$PROJECT_DIR$/WorldBorder/WorldBorder.iml" filepath="$PROJECT_DIR$/WorldBorder/WorldBorder.iml" />
     </modules>
   </component>
