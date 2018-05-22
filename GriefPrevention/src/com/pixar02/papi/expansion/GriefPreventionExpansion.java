@@ -103,6 +103,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion {
         if (p == null) {
             return "";
         }
+
         DataStore DataS = plugin.dataStore;
         PlayerData pd = DataS.getPlayerData(p.getUniqueId());
 
