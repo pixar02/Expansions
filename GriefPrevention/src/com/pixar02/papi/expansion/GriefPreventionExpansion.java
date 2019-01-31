@@ -1,17 +1,24 @@
 package com.pixar02.papi.expansion;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class GriefPreventionExpansion extends PlaceholderExpansion {
+
+
     private GriefPrevention plugin;
+    private String k, m, b, t, q;
 
     /**
      * Since this expansion requires api access to the plugin "SomePlugin" we must
@@ -90,7 +97,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getVersion() {
-        return "1.2.0";
+        return "1.3.0";
     }
 
     /**
@@ -107,30 +114,46 @@ public class GriefPreventionExpansion extends PlaceholderExpansion {
         DataStore DataS = plugin.dataStore;
         PlayerData pd = DataS.getPlayerData(p.getUniqueId());
 
-        // %griefprevention_claims%
+        /*
+         %griefprevention_claims%
+         %griefprevention_claims_formatted%
+        */
         if (identifier.equals("claims")) {
             return String.valueOf(pd.getClaims().size());
+        } else if (identifier.equals("claims_formatted")) {
+            return fixMoney(pd.getClaims().size());
         }
+
         // %griefprevention_bonusclaims%
         if (identifier.equals("bonusclaims")) {
             return String.valueOf(pd.getBonusClaimBlocks());
-
         }
-        // %griefprevention_accruedclaims%
+
+        /*
+         %griefprevention_accruedclaims%
+         %griefprevention_accruedclaims_formatted%
+        */
         if (identifier.equals("accruedclaims")) {
             return String.valueOf(pd.getAccruedClaimBlocks());
-
+        } else if (identifier.equals("accruedclaims_formatted")) {
+            return fixMoney(pd.getAccruedClaimBlocks());
         }
+
         // %griefprevention_accruedclaims_limit%
         if (identifier.equals("accruedclaims_limit")) {
             return String.valueOf(pd.getAccruedClaimBlocksLimit());
-
         }
-        // %griefprevention_remainingclaims%
+
+        /*
+         %griefprevention_remainingclaims%
+         %griefprevention_remainingclaims_formatted%
+        */
         if (identifier.equals("remainingclaims")) {
             return String.valueOf(pd.getRemainingClaimBlocks());
-
+        } else if (identifier.equals("remainingclaims_formatted")) {
+            return fixMoney(pd.getRemainingClaimBlocks());
         }
+
         // %griefprevention_currentclaim_ownername%
         if (identifier.equals("currentclaim_ownername")) {
             Claim claim = DataS.getClaimAt(p.getLocation(), true, null);
@@ -141,12 +164,52 @@ public class GriefPreventionExpansion extends PlaceholderExpansion {
             }
 
         }
-        // %griefprevention_XXX%
-        if (identifier.equals("XXX")) {
-            return "XXX";
-
-        }
         return null;
+    }
+
+    public Map<String, Object> getDefaults() {
+        Map<String, Object> defaults = new HashMap<String, Object>();
+        defaults.put("formatting.thousands", "k");
+        defaults.put("formatting.millions", "M");
+        defaults.put("formatting.billions", "B");
+        defaults.put("formatting.trillions", "T");
+        defaults.put("formatting.quadrillions", "Q");
+        return defaults;
+    }
+
+
+    private String fixMoney(double d) {
+        if (d < 1000L) {
+            return format(d);
+        }
+        if (d < 1000000L) {
+            return format(d / 1000L) + k;
+        }
+        if (d < 1000000000L) {
+            return format(d / 1000000L) + m;
+        }
+        if (d < 1000000000000L) {
+            return format(d / 1000000000L) + b;
+        }
+        if (d < 1000000000000000L) {
+            return format(d / 1000000000000L) + t;
+        }
+        if (d < 1000000000000000000L) {
+            return format(d / 1000000000000000L) + q;
+        }
+        return toLong(d);
+    }
+
+    private String toLong(double amt) {
+        long send = (long) amt;
+        return String.valueOf(send);
+    }
+
+    private String format(double d) {
+        NumberFormat format = NumberFormat.getInstance(Locale.ENGLISH);
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(0);
+        return format.format(d);
     }
 
 }
