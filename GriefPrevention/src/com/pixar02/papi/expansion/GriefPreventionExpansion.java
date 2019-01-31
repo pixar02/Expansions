@@ -1,6 +1,7 @@
 package com.pixar02.papi.expansion;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.expansion.Configurable;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
@@ -14,11 +15,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class GriefPreventionExpansion extends PlaceholderExpansion {
-
+public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable {
 
     private GriefPrevention plugin;
-    private String k, m, b, t, q;
 
     /**
      * Since this expansion requires api access to the plugin "SomePlugin" we must
@@ -100,6 +99,17 @@ public class GriefPreventionExpansion extends PlaceholderExpansion {
         return "1.3.0";
     }
 
+    @Override
+    public Map<String, Object> getDefaults() {
+        Map<String, Object> defaults = new HashMap<String, Object>();
+        defaults.put("formatting.thousands", "k");
+        defaults.put("formatting.millions", "M");
+        defaults.put("formatting.billions", "B");
+        defaults.put("formatting.trillions", "T");
+        defaults.put("formatting.quadrillions", "Q");
+        return defaults;
+    }
+
     /**
      * This is the method called when a placeholder with our identifier is found and
      * needs a value We specify the value identifier in this method
@@ -167,35 +177,24 @@ public class GriefPreventionExpansion extends PlaceholderExpansion {
         return null;
     }
 
-    public Map<String, Object> getDefaults() {
-        Map<String, Object> defaults = new HashMap<String, Object>();
-        defaults.put("formatting.thousands", "k");
-        defaults.put("formatting.millions", "M");
-        defaults.put("formatting.billions", "B");
-        defaults.put("formatting.trillions", "T");
-        defaults.put("formatting.quadrillions", "Q");
-        return defaults;
-    }
-
-
     private String fixMoney(double d) {
         if (d < 1000L) {
             return format(d);
         }
         if (d < 1000000L) {
-            return format(d / 1000L) + k;
+            return format(d / 1000L) + getString("formatting.thousands", "k");
         }
         if (d < 1000000000L) {
-            return format(d / 1000000L) + m;
+            return format(d / 1000000L) + getString("formatting.millions", "m");
         }
         if (d < 1000000000000L) {
-            return format(d / 1000000000L) + b;
+            return format(d / 1000000000L) + getString("formatting.billions", "b");
         }
         if (d < 1000000000000000L) {
-            return format(d / 1000000000000L) + t;
+            return format(d / 1000000000000L) + getString("formatting.trillions", "t");
         }
         if (d < 1000000000000000000L) {
-            return format(d / 1000000000000000L) + q;
+            return format(d / 1000000000000000L) + getString("formatting.quadrillions", "q");
         }
         return toLong(d);
     }
