@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Griefprevention/Griefprevention.iml" filepath="$PROJECT_DIR$/Griefprevention/Griefprevention.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Griefprevention/GriefPrevention.iml" filepath="$PROJECT_DIR$/Griefprevention/GriefPrevention.iml" />
       <module fileurl="file://$PROJECT_DIR$/Kredi/Kredi.iml" filepath="$PROJECT_DIR$/Kredi/Kredi.iml" />
       <module fileurl="file://$PROJECT_DIR$/McCombat/McCombat.iml" filepath="$PROJECT_DIR$/McCombat/McCombat.iml" />
       <module fileurl="file://$PROJECT_DIR$/PowerRanks/PowerRanks.iml" filepath="$PROJECT_DIR$/PowerRanks/PowerRanks.iml" />
