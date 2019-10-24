@@ -1,4 +1,4 @@
-package com.infogroup.infoboard.animations;
+package com.pixar02.papi.expansion;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.Configurable;
@@ -9,6 +9,7 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
@@ -109,7 +110,7 @@ public class Temp extends PlaceholderExpansion implements Configurable{
         defaults.put("formatting.trillions", "T");
         defaults.put("formatting.quadrillions", "Q");
         defaults.put("coloring.enemy", "&4");
-        defaults.put("coloring.friendly", "&a");
+        defaults.put("coloring.trusted", "&a");
         defaults.put("coloring.neutral", "&7");
         return defaults;
     }
@@ -183,8 +184,16 @@ public class Temp extends PlaceholderExpansion implements Configurable{
                 return ChatColor.translateAlternateColorCodes('&',
                         getString("color.neutral", "&7") + "Unclaimed");
             } else {
-                //TODO add color and check if (trusted/not trusted)
-                return String.valueOf(claim.getOwnerName());
+                if (claim.allowBuild(p, null) == null){
+                    //Trusted
+                    return ChatColor.translateAlternateColorCodes('&',
+                            getString("color.trusted", "&a") + String.valueOf(claim.getOwnerName()));
+                }else{
+                    // not trusted
+                    return ChatColor.translateAlternateColorCodes('&',
+                            getString("color.enemy", "&4") + String.valueOf(claim.getOwnerName()));
+
+                }
             }
         }
         return null;
@@ -225,4 +234,3 @@ public class Temp extends PlaceholderExpansion implements Configurable{
     }
 
 }
-
