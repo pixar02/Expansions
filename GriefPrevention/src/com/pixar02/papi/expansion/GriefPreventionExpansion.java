@@ -1,4 +1,4 @@
-package com.pixar02.papi.expansion;
+package com.infogroup.infoboard.animations;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.Configurable;
@@ -8,6 +8,7 @@ import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable {
+public class Temp extends PlaceholderExpansion implements Configurable{
 
     private GriefPrevention plugin;
 
@@ -107,6 +108,9 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         defaults.put("formatting.billions", "B");
         defaults.put("formatting.trillions", "T");
         defaults.put("formatting.quadrillions", "Q");
+        defaults.put("coloring.enemy", "&4");
+        defaults.put("coloring.friendly", "&a");
+        defaults.put("coloring.neutral", "&7");
         return defaults;
     }
 
@@ -164,6 +168,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
             return fixMoney(pd.getRemainingClaimBlocks());
         }
 
+        // %griefprevention_currentclaim_ownername_color%
         // %griefprevention_currentclaim_ownername%
         if (identifier.equals("currentclaim_ownername")) {
             Claim claim = DataS.getClaimAt(p.getLocation(), true, null);
@@ -172,7 +177,15 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
             } else {
                 return String.valueOf(claim.getOwnerName());
             }
-
+        } else if (identifier.equals("currentclaim_ownername_color")) {
+            Claim claim = DataS.getClaimAt(p.getLocation(), true, null);
+            if (claim == null) {
+                return ChatColor.translateAlternateColorCodes('&',
+                        getString("color.neutral", "&7") + "Unclaimed");
+            } else {
+                //TODO add color and check if (trusted/not trusted)
+                return String.valueOf(claim.getOwnerName());
+            }
         }
         return null;
     }
@@ -212,3 +225,4 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
     }
 
 }
+
