@@ -184,7 +184,7 @@ public class Temp extends PlaceholderExpansion implements Configurable{
                 return ChatColor.translateAlternateColorCodes('&',
                         getString("color.neutral", "&7") + "Unclaimed");
             } else {
-                if (claim.allowBuild(p, null) == null){
+                if (claim.allowAccess(p) == null){
                     //Trusted
                     return ChatColor.translateAlternateColorCodes('&',
                             getString("color.trusted", "&a") + String.valueOf(claim.getOwnerName()));
