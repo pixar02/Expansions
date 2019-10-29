@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PowerRanks:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PowerRanks_jar</output-path>
+    <root id="archive" name="PowerRanks.jar">
+      <element id="module-output" name="PowerRanks" />
+    </root>
+  </artifact>
+</component>

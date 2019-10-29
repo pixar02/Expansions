@@ -9,7 +9,6 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class Temp extends PlaceholderExpansion implements Configurable{
+public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable{
 
     private GriefPrevention plugin;
 
