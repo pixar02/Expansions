@@ -97,7 +97,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String getVersion() {
-        return "1.4.0";
+        return "1.4.1";
     }
 
     @Override
@@ -108,9 +108,9 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         defaults.put("formatting.billions", "B");
         defaults.put("formatting.trillions", "T");
         defaults.put("formatting.quadrillions", "Q");
-        defaults.put("coloring.enemy", "&4");
-        defaults.put("coloring.trusted", "&a");
-        defaults.put("coloring.neutral", "&7");
+        defaults.put("color.enemy", "&4");
+        defaults.put("color.trusted", "&a");
+        defaults.put("color.neutral", "&7");
         return defaults;
     }
 
@@ -181,16 +181,16 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
             Claim claim = DataS.getClaimAt(p.getLocation(), true, null);
             if (claim == null) {
                 return ChatColor.translateAlternateColorCodes('&',
-                        getString("color.neutral", "&7") + "Unclaimed");
+                        getString("color.neutral", "") + "Unclaimed");
             } else {
                 if (claim.allowAccess(p) == null){
                     //Trusted
                     return ChatColor.translateAlternateColorCodes('&',
-                            getString("color.trusted", "&a") + String.valueOf(claim.getOwnerName()));
+                            getString("color.trusted", "") + String.valueOf(claim.getOwnerName()));
                 }else{
                     // not trusted
                     return ChatColor.translateAlternateColorCodes('&',
-                            getString("color.enemy", "&4") + String.valueOf(claim.getOwnerName()));
+                            getString("color.enemy", "") + String.valueOf(claim.getOwnerName()));
 
                 }
             }
