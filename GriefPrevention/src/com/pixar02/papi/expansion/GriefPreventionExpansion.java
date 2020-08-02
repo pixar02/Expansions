@@ -20,45 +20,13 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
 
     private GriefPrevention plugin;
 
-    /**
-     * Since this expansion requires api access to the plugin "SomePlugin" we must
-     * check if "SomePlugin" is on the server in this method
-     */
     @Override
     public boolean canRegister() {
-        return Bukkit.getPluginManager().getPlugin(getRequiredPlugin()) != null;
-    }
-
-    /**
-     * We can optionally override this method if we need to initialize variables
-     * within this class if we need to or even if we have to do other checks to
-     * ensure the hook is properly setup.
-     */
-    @Override
-    public boolean register() {
-        /*
-         * Make sure "SomePlugin" is on the server
-         */
-        if (!canRegister()) {
+        if (!Bukkit.getPluginManager().isPluginEnabled(getRequiredPlugin())) {
             return false;
         }
-
-        /*
-         * "SomePlugin" does not have static methods to access its api so we must create
-         * set a variable to obtain access to it
-         */
         plugin = (GriefPrevention) Bukkit.getPluginManager().getPlugin(getRequiredPlugin());
-
-        /*
-         * if for some reason we can not get our variable, we should return false
-         */
-        if (plugin == null) {
-            return false;
-        }
-        /*
-         * Since we override the register method, we need to manually register this hook
-         */
-        return super.register();
+        return super.register() && plugin != null;
     }
 
     /**

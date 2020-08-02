@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Griefprevention:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Griefprevention_jar</output-path>
-    <root id="archive" name="Griefprevention.jar">
-      <element id="module-output" name="GriefPrevention" />
-    </root>
-  </artifact>
-</component>
