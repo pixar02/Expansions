@@ -1,6 +1,5 @@
 package com.pixar02.papi.expansion;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.Configurable;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.ryanhamshire.GriefPrevention.Claim;
@@ -9,6 +8,7 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable{
+public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable {
 
     private GriefPrevention plugin;
 
@@ -26,7 +26,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public boolean canRegister() {
-        return Bukkit.getPluginManager().getPlugin(getPlugin()) != null;
+        return Bukkit.getPluginManager().getPlugin(getRequiredPlugin()) != null;
     }
 
     /**
@@ -47,7 +47,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
          * "SomePlugin" does not have static methods to access its api so we must create
          * set a variable to obtain access to it
          */
-        plugin = (GriefPrevention) Bukkit.getPluginManager().getPlugin(getPlugin());
+        plugin = (GriefPrevention) Bukkit.getPluginManager().getPlugin(getRequiredPlugin());
 
         /*
          * if for some reason we can not get our variable, we should return false
@@ -58,7 +58,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         /*
          * Since we override the register method, we need to manually register this hook
          */
-        return PlaceholderAPI.registerPlaceholderHook(getIdentifier(), this);
+        return super.register();
     }
 
     /**
@@ -88,7 +88,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      * cache to be registered when plugin: "getPlugin()" is enabled on the server.
      */
     @Override
-    public String getPlugin() {
+    public String getRequiredPlugin() {
         return "GriefPrevention";
     }
 
@@ -119,7 +119,8 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      * needs a value We specify the value identifier in this method
      */
     @Override
-    public String onPlaceholderRequest(Player p, String identifier) {
+    public String onRequest(OfflinePlayer p, String identifier) {
+        Player player = (Player) p;
 
         if (p == null) {
             return "";
@@ -171,19 +172,19 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         // %griefprevention_currentclaim_ownername_color%
         // %griefprevention_currentclaim_ownername%
         if (identifier.equals("currentclaim_ownername")) {
-            Claim claim = DataS.getClaimAt(p.getLocation(), true, null);
+            Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
             if (claim == null) {
                 return "Unclaimed";
             } else {
                 return String.valueOf(claim.getOwnerName());
             }
         } else if (identifier.equals("currentclaim_ownername_color")) {
-            Claim claim = DataS.getClaimAt(p.getLocation(), true, null);
+            Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
             if (claim == null) {
                 return ChatColor.translateAlternateColorCodes('&',
                         getString("color.neutral", "") + "Unclaimed");
             } else {
-                if (claim.allowAccess(p) == null){
+                if (claim.allowAccess(player) == null){
                     //Trusted
                     return ChatColor.translateAlternateColorCodes('&',
                             getString("color.trusted", "") + String.valueOf(claim.getOwnerName()));
