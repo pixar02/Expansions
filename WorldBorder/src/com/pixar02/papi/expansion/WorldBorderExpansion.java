@@ -1,7 +1,7 @@
 package com.pixar02.papi.expansion;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-
+import org.bukkit.OfflinePlayer;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 
@@ -48,7 +48,7 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      * for them to work
      */
     @Override
-    public String getPlugin() {
+    public String getRequiredPlugin() {
         return null;
     }
 
@@ -57,7 +57,7 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getVersion() {
-        return "1.0.0";
+        return "1.0.1";
     }
 
     /**
@@ -65,7 +65,12 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      * We specify the value identifier in this method
      */
     @Override
-    public String onPlaceholderRequest(Player p, String identifier) {
+    public String onRequest(OfflinePlayer player, String identifier) {
+        if (!player.isOnline()) {
+            return "Player is offline";
+        }
+
+        Player p = player.getPlayer();
 
         if (p == null) {
             return "";
@@ -102,7 +107,6 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
         if (identifier.equals("warning_time")) {
             return String.valueOf(worldBorder.getWarningTime());
         }
-
 
         return null;
     }

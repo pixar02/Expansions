@@ -97,7 +97,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String getVersion() {
-        return "1.4.1";
+        return "1.5";
     }
 
     @Override
@@ -120,7 +120,11 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String onRequest(OfflinePlayer p, String identifier) {
-        Player player = (Player) p;
+        if (!p.isOnline()) {
+            return "Player is offline";
+        }
+
+        Player player = p.getPlayer();
 
         if (p == null) {
             return "";
