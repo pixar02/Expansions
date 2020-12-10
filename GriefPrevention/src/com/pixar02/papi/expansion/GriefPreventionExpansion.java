@@ -97,7 +97,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String getVersion() {
-        return "1.5.1";
+        return "1.5.2";
     }
 
     @Override
@@ -108,9 +108,12 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         defaults.put("formatting.billions", "B");
         defaults.put("formatting.trillions", "T");
         defaults.put("formatting.quadrillions", "Q");
+
         defaults.put("color.enemy", "&4");
         defaults.put("color.trusted", "&a");
         defaults.put("color.neutral", "&7");
+
+        defaults.put("translate.unclaimed", "Unclaimed");
         return defaults;
     }
 
@@ -140,8 +143,11 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         }
 
         // %griefprevention_bonusclaims%
+        // %griefprevention_bonusclaims_formatted%
         if (identifier.equals("bonusclaims")) {
             return String.valueOf(pd.getBonusClaimBlocks());
+        } else if (identifier.equals("bonusclaims_formatted")) {
+            return fixMoney(pd.getBonusClaimBlocks());
         }
 
         /*
@@ -174,7 +180,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         if (identifier.equals("currentclaim_ownername")) {
             Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
             if (claim == null) {
-                return "Unclaimed";
+                return getString("translate.unclaimed", "Unclaimed!");
             } else {
                 return String.valueOf(claim.getOwnerName());
             }
@@ -182,7 +188,8 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
             Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
             if (claim == null) {
                 return ChatColor.translateAlternateColorCodes('&',
-                        getString("color.neutral", "") + "Unclaimed");
+                        getString("color.neutral", "")
+                                + getString("translate.unclaimed", "Unclaimed!"));
             } else {
                 if (claim.allowAccess(player) == null){
                     //Trusted
