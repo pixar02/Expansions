@@ -208,7 +208,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
                 return ChatColor.translateAlternateColorCodes('&',
                         getString("translate.unclaimed", "Unclaimed!"));
             } else {
-                return String.valueOf(claim.getOwnerName());
+                return String.valueOf(ChatColor.translateAlternateColorCodes('&', claim.getOwnerName()));
             }
         } else if (identifier.equals("currentclaim_ownername_color")) {
             Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
