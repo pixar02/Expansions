@@ -15,6 +15,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable {
 
@@ -97,7 +98,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String getVersion() {
-        return "1.5.2";
+        return "1.6.0";
     }
 
     @Override
@@ -114,6 +115,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         defaults.put("color.neutral", "&7");
 
         defaults.put("translate.unclaimed", "Unclaimed");
+        defaults.put("translate.not-owner", "You don't own this claim!");
         return defaults;
     }
 
@@ -136,6 +138,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
          %griefprevention_claims%
          %griefprevention_claims_formatted%
         */
+
         if (identifier.equals("claims")) {
             return String.valueOf(pd.getClaims().size());
         } else if (identifier.equals("claims_formatted")) {
@@ -165,6 +168,28 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
             return String.valueOf(pd.getAccruedClaimBlocksLimit());
         }
 
+        //%griefprevention_claimedblocks_total%
+        if (identifier.equals("claimedblocks_total")) {
+            int blocks = 0;
+            for (Claim c : pd.getClaims()) {
+                blocks += c.getArea();
+            }
+            return String.valueOf(blocks);
+        }
+
+        //%griefprevention_claimedblocks_current%
+        if (identifier.equals("claimedblocks_current")) {
+            Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
+            if (claim == null) {
+                return ChatColor.translateAlternateColorCodes('&',
+                        getString("translate.unclaimed", "Unclaimed!"));
+            } else if (Objects.equals(claim.getOwnerName(), p.getName())) {
+                return String.valueOf(claim.getArea());
+            }
+            return ChatColor.translateAlternateColorCodes('&',
+                    getString("translate.not-owner", "You don't own this claim!"));
+        }
+
         /*
          %griefprevention_remainingclaims%
          %griefprevention_remainingclaims_formatted%
@@ -180,7 +205,8 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         if (identifier.equals("currentclaim_ownername")) {
             Claim claim = DataS.getClaimAt(player.getLocation(), true, null);
             if (claim == null) {
-                return getString("translate.unclaimed", "Unclaimed!");
+                return ChatColor.translateAlternateColorCodes('&',
+                        getString("translate.unclaimed", "Unclaimed!"));
             } else {
                 return String.valueOf(claim.getOwnerName());
             }
