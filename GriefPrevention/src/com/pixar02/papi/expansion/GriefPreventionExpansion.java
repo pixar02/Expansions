@@ -12,10 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class GriefPreventionExpansion extends PlaceholderExpansion implements Configurable {
 
@@ -27,39 +24,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public boolean canRegister() {
-        return Bukkit.getPluginManager().getPlugin(getRequiredPlugin()) != null;
-    }
-
-    /**
-     * We can optionally override this method if we need to initialize variables
-     * within this class if we need to or even if we have to do other checks to
-     * ensure the hook is properly setup.
-     */
-    @Override
-    public boolean register() {
-        /*
-         * Make sure "SomePlugin" is on the server
-         */
-        if (!canRegister()) {
-            return false;
-        }
-
-        /*
-         * "SomePlugin" does not have static methods to access its api so we must create
-         * set a variable to obtain access to it
-         */
-        plugin = (GriefPrevention) Bukkit.getPluginManager().getPlugin(getRequiredPlugin());
-
-        /*
-         * if for some reason we can not get our variable, we should return false
-         */
-        if (plugin == null) {
-            return false;
-        }
-        /*
-         * Since we override the register method, we need to manually register this hook
-         */
-        return super.register();
+        return (plugin = (GriefPrevention) Bukkit.getPluginManager().getPlugin(getRequiredPlugin())) != null;
     }
 
     /**
@@ -117,6 +82,26 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         defaults.put("translate.unclaimed", "Unclaimed");
         defaults.put("translate.not-owner", "You don't own this claim!");
         return defaults;
+    }
+
+    @Override
+    public List<String> getPlaceholders() {
+        List<String> placeholders = new ArrayList<>();
+        placeholders.add("%griefprevention_claims%");
+        placeholders.add("%griefprevention_claims_formatted%");
+        placeholders.add("%griefprevention_bonusclaims%");
+        placeholders.add("%griefprevention_bonusclaims_formatted%");
+        placeholders.add("%griefprevention_accruedclaims%");
+        placeholders.add("%griefprevention_accruedclaims_formatted%");
+        placeholders.add("%griefprevention_accruedclaims_limit%");
+        placeholders.add("%griefprevention_claimedblocks_total%");
+        placeholders.add("%griefprevention_accruedclaims%");
+        placeholders.add("%griefprevention_claimedblocks_current%");
+        placeholders.add("%griefprevention_remainingclaims%");
+        placeholders.add("%griefprevention_remainingclaims_formatted%");
+        placeholders.add("%griefprevention_currentclaim_ownername%");
+        placeholders.add("%griefprevention_currentclaim_ownername_color%");
+        return placeholders;
     }
 
     /**
