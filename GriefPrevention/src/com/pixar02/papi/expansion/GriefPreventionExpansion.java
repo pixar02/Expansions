@@ -95,7 +95,6 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         placeholders.add("%griefprevention_accruedclaims_formatted%");
         placeholders.add("%griefprevention_accruedclaims_limit%");
         placeholders.add("%griefprevention_claimedblocks_total%");
-        placeholders.add("%griefprevention_accruedclaims%");
         placeholders.add("%griefprevention_claimedblocks_current%");
         placeholders.add("%griefprevention_remainingclaims%");
         placeholders.add("%griefprevention_remainingclaims_formatted%");
