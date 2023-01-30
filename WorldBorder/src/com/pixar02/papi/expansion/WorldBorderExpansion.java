@@ -1,5 +1,6 @@
 package com.pixar02.papi.expansion;
 
+import com.sun.istack.internal.NotNull;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 import org.bukkit.Bukkit;
@@ -7,10 +8,13 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
+import org.bukkit.Location;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * This class will automatically register as a placeholder expansion
@@ -18,6 +22,11 @@ import java.util.Arrays;
  *
  */
 public class WorldBorderExpansion extends PlaceholderExpansion {
+    /**
+     * Match _ that aren't inside {}.
+     * Example: fromWorld_{world_nether}_size => fromWorld, {world_nether}, size
+     */
+    protected static Pattern splitPattern = Pattern.compile("_(?![^{]*})");
 
     /**
      * This method should always return true unless we
@@ -64,7 +73,22 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getVersion() {
-        return "1.1.0";
+        return "1.2.0";
+    }
+
+    @Override
+    public @NotNull List<String> getPlaceholders() {
+        return Arrays.asList(
+            "%worldborder_size%",
+            "%worldborder_center%",
+            "%worldborder_center_x%",
+            "%worldborder_center_z%",
+            "%worldborder_damage_amount%",
+            "%worldborder_damage_buffer%",
+            "%worldborder_warning_distance%",
+            "%worldborder_warning_time%",
+            "%worldborder_fromWorld_{worldName}_(anyArgument)%"
+        );
     }
 
     /**
@@ -73,22 +97,24 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
-        String[] parts = identifier.split("_");
+        String[] parts = splitPattern.split(identifier);
         if (parts.length < 1) return "Insufficient arguments.";
-        String firstPart = parts[0];
-
         String argument;
         WorldBorder worldBorder;
 
-        if (firstPart.equals("fromWorld")) {
+        if (parts[0].equals("fromWorld")) {
             if (parts.length < 3) return "Insufficient arguments.";
-            String worldName = parts[1];
-            String[] argumentsArray = Arrays.copyOfRange(parts, 2, parts.length);
-            argument = String.join("_", argumentsArray);
-
+            // {world}
+            String worldNameWithBrackets = parts[1];
+            // world
+            String worldName = worldNameWithBrackets.substring(1, worldNameWithBrackets.length() - 1);
             worldBorder = getBorderByWorldName(worldName);
             if (worldBorder == null) return "World not found";
+
+            String[] argumentsArray = Arrays.copyOfRange(parts, 2, parts.length);
+            argument = String.join("_", argumentsArray);
         } else {
+            if (player == null) return "Player not found.";
             if (!player.isOnline()) {
                 return "Player is offline";
             }
@@ -96,12 +122,11 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
             Player p = player.getPlayer();
 
             if (p == null) {
-                return "";
+                return "Player not found.";
             }
 
             worldBorder = p.getWorld().getWorldBorder();
-            String[] argumentsArray = Arrays.copyOfRange(parts, 1, parts.length);
-            argument = String.join("_", argumentsArray);
+            argument = identifier;
         }
 
         // %worldborder_size%
@@ -110,8 +135,16 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
         }
 
         // %worldborder_center%
-        if (argument.equals("center")) {
-            return String.valueOf(worldBorder.getCenter());
+        if (argument.startsWith("center")) {
+            String[] centerParts = argument.split("_");
+            Location center = worldBorder.getCenter();
+
+            if (centerParts.length == 1) return center.getX() + ", " + center.getZ();
+            String requestedCoordinate = centerParts[1];
+            if (requestedCoordinate.equals("x")) return String.valueOf(center.getX());
+            if (requestedCoordinate.equals("z")) return String.valueOf(center.getZ());
+
+            return "Invalid requested coordinate. Must be x or z.";
         }
 
         // %worldborder_damage_amount%
