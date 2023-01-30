@@ -1,9 +1,16 @@
 package com.pixar02.papi.expansion;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * This class will automatically register as a placeholder expansion
@@ -57,7 +64,7 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getVersion() {
-        return "1.0.1";
+        return "1.1.0";
     }
 
     /**
@@ -66,48 +73,73 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
-        if (!player.isOnline()) {
-            return "Player is offline";
+        String[] parts = identifier.split("_");
+        if (parts.length < 1) return "Insufficient arguments.";
+        String firstPart = parts[0];
+
+        String argument;
+        WorldBorder worldBorder;
+
+        if (firstPart.equals("fromWorld")) {
+            if (parts.length < 3) return "Insufficient arguments.";
+            String worldName = parts[1];
+            String[] argumentsArray = Arrays.copyOfRange(parts, 2, parts.length);
+            argument = String.join("_", argumentsArray);
+
+            worldBorder = getBorderByWorldName(worldName);
+            if (worldBorder == null) return "World not found";
+        } else {
+            if (!player.isOnline()) {
+                return "Player is offline";
+            }
+
+            Player p = player.getPlayer();
+
+            if (p == null) {
+                return "";
+            }
+
+            worldBorder = p.getWorld().getWorldBorder();
+            String[] argumentsArray = Arrays.copyOfRange(parts, 1, parts.length);
+            argument = String.join("_", argumentsArray);
         }
-
-        Player p = player.getPlayer();
-
-        if (p == null) {
-            return "";
-        }
-
-        WorldBorder worldBorder = p.getWorld().getWorldBorder();
 
         // %worldborder_size%
-        if (identifier.equals("size")) {
+        if (argument.equals("size")) {
             return String.valueOf(worldBorder.getSize());
         }
 
         // %worldborder_center%
-        if (identifier.equals("center")) {
+        if (argument.equals("center")) {
             return String.valueOf(worldBorder.getCenter());
         }
 
         // %worldborder_damage_amount%
-        if (identifier.equals("damage_amount")) {
+        if (argument.equals("damage_amount")) {
             return String.valueOf(worldBorder.getDamageAmount());
         }
 
         // %worldborder_damage_buffer%
-        if (identifier.equals("damage_buffer")) {
+        if (argument.equals("damage_buffer")) {
             return String.valueOf(worldBorder.getDamageBuffer());
         }
 
         // %worldborder_warning_distance%
-        if (identifier.equals("warning_distance")) {
+        if (argument.equals("warning_distance")) {
             return String.valueOf(worldBorder.getWarningDistance());
         }
 
         // %worldborder_warning_time%
-        if (identifier.equals("warning_time")) {
+        if (argument.equals("warning_time")) {
             return String.valueOf(worldBorder.getWarningTime());
         }
 
         return null;
+    }
+
+    protected @Nullable WorldBorder getBorderByWorldName(@Nonnull String name) {
+        World world = Bukkit.getWorld(name);
+        if (world == null) return null;
+        return world.getWorldBorder();
     }
 }
