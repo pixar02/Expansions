@@ -1,6 +1,7 @@
 package com.pixar02.papi.expansion;
 
-import com.sun.istack.internal.NotNull;
+import com.pixar02.papi.expansion.argument.ArgumentSplitType;
+import me.clip.placeholderapi.expansion.Configurable;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 import org.bukkit.Bukkit;
@@ -14,19 +15,25 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.Collections;
 
 /**
  * This class will automatically register as a placeholder expansion
  * when a jar including this class is added to the /plugins/placeholderapi/expansions/ folder
  *
  */
-public class WorldBorderExpansion extends PlaceholderExpansion {
+public class WorldBorderExpansion extends PlaceholderExpansion implements Configurable {
+    protected final static String SPLIT_TYPE_PATH = "splitType";
+
     /**
      * Match _ that aren't inside {}.
      * Example: fromWorld_{world_nether}_size => fromWorld, {world_nether}, size
      */
-    protected static Pattern splitPattern = Pattern.compile("_(?![^{]*})");
+    protected @Nonnull ArgumentSplitType argumentSplitType = ArgumentSplitType.DEFAULT;
+
+    public WorldBorderExpansion() {
+    }
 
     /**
      * This method should always return true unless we
@@ -36,6 +43,21 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public boolean canRegister() {
+        String configuredIdentifier = getString(SPLIT_TYPE_PATH, "").toUpperCase();
+        try {
+            this.argumentSplitType = ArgumentSplitType.valueOf(configuredIdentifier);
+        } catch (Exception exception) {
+            this.argumentSplitType = ArgumentSplitType.DEFAULT;
+            String[] argumentSplitTypeEnumKeys = Arrays
+                .stream(ArgumentSplitType.class.getEnumConstants())
+                .map(Enum::name)
+                .toArray(String[]::new);
+            String readableSplitTypeKeys = String.join(", ", argumentSplitTypeEnumKeys);
+            warning("No split type (PlaceholderAPI/config.yml > expansions.worldborder." + SPLIT_TYPE_PATH + ") was found or it's invalid.");
+            warning(String.format("Should be one of: " + readableSplitTypeKeys + ". Using default: %s.", this.argumentSplitType.name()));
+            warning("For example, OMIT_ANGLE_BRACKET omits underscores inside angle brackets (fromWorld_{world_nether}). NO_OMIT captures all underscores.");
+            warning("If this is the first time installing the expansion, ignore this message.");
+        }
         return true;
     }
 
@@ -58,6 +80,10 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
         return "worldborder";
     }
 
+    public String getName() {
+        return "WorldBorder Expansion";
+    }
+
     /**
      * if an expansion requires another plugin as a dependency, the proper name of the dependency should
      * go here. Set this to null if your placeholders do not require another plugin be installed on the server
@@ -73,11 +99,11 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getVersion() {
-        return "1.2.0";
+        return "1.2.1";
     }
 
     @Override
-    public @NotNull List<String> getPlaceholders() {
+    public @Nonnull List<String> getPlaceholders() {
         return Arrays.asList(
             "%worldborder_size%",
             "%worldborder_center%",
@@ -91,13 +117,20 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
         );
     }
 
+    @Override
+    @Nonnull
+    public Map<String, Object> getDefaults() {
+        return Collections.singletonMap("splitType", ArgumentSplitType.DEFAULT.name());
+    }
+
     /**
      * This is the method called when a placeholder with our identifier is found and needs a value
      * We specify the value identifier in this method
      */
     @Override
+    @Nullable
     public String onRequest(OfflinePlayer player, String identifier) {
-        String[] parts = splitPattern.split(identifier);
+        String[] parts = this.argumentSplitType.getPattern().split(identifier);
         if (parts.length < 1) return "Insufficient arguments.";
         String argument;
         WorldBorder worldBorder;
@@ -109,7 +142,7 @@ public class WorldBorderExpansion extends PlaceholderExpansion {
             // world
             String worldName = worldNameWithBrackets.substring(1, worldNameWithBrackets.length() - 1);
             worldBorder = getBorderByWorldName(worldName);
-            if (worldBorder == null) return "World not found";
+            if (worldBorder == null) return String.format("World %s not found.", worldName);
 
             String[] argumentsArray = Arrays.copyOfRange(parts, 2, parts.length);
             argument = String.join("_", argumentsArray);
