@@ -64,7 +64,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String getVersion() {
-        return "1.6.0";
+        return "1.7.0";
     }
 
     @Override
