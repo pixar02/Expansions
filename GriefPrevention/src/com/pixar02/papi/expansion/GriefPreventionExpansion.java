@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import javax.xml.crypto.Data;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -87,6 +88,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
     @Override
     public List<String> getPlaceholders() {
         List<String> placeholders = new ArrayList<>();
+        placeholders.add("%griefprevention_muted%");
         placeholders.add("%griefprevention_claims%");
         placeholders.add("%griefprevention_claims_formatted%");
         placeholders.add("%griefprevention_bonusclaims%");
@@ -118,11 +120,21 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         DataStore DataS = plugin.dataStore;
         PlayerData pd = DataS.getPlayerData(player.getUniqueId());
 
+        // %griefprevention_muted%
+        if (identifier.equals("muted")){
+            if (DataS.isSoftMuted(player.getUniqueId())){
+                return ChatColor.translateAlternateColorCodes('&',
+                        getString("translate.muted", "Muted!"));
+            } else {
+                return ChatColor.translateAlternateColorCodes('&',
+                        getString("translate.not_muted", "Not Muted!"));
+            }
+        }
+
         /*
          %griefprevention_claims%
          %griefprevention_claims_formatted%
         */
-
         if (identifier.equals("claims")) {
             return String.valueOf(pd.getClaims().size());
         } else if (identifier.equals("claims_formatted")) {
