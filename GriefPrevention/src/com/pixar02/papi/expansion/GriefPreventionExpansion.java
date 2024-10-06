@@ -64,7 +64,7 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
      */
     @Override
     public String getVersion() {
-        return "1.7.0";
+        return "1.8.0";
     }
 
     @Override
@@ -96,6 +96,8 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         placeholders.add("%griefprevention_accruedclaims%");
         placeholders.add("%griefprevention_accruedclaims_formatted%");
         placeholders.add("%griefprevention_accruedclaims_limit%");
+        placeholders.add("%griefprevention_totalclaims%");
+        placeholders.add("%griefprevention_totalclaims_formatted%");
         placeholders.add("%griefprevention_claimedblocks_total%");
         placeholders.add("%griefprevention_claimedblocks_current%");
         placeholders.add("%griefprevention_remainingclaims%");
@@ -162,6 +164,14 @@ public class GriefPreventionExpansion extends PlaceholderExpansion implements Co
         // %griefprevention_accruedclaims_limit%
         if (identifier.equals("accruedclaims_limit")) {
             return String.valueOf(pd.getAccruedClaimBlocksLimit());
+        }
+
+        // %griefprevention_totalclaims%
+        // %griefprevention_totalclaims_formatted%
+        if (identifier.equals("totalclaims")) {
+            return String.valueOf(pd.getAccruedClaimBlocks() + pd.getBonusClaimBlocks());
+        } else if (identifier.equals("totalclaims_formatted")) {
+            return fixMoney(pd.getAccruedClaimBlocks() + pd.getBonusClaimBlocks());
         }
 
         //%griefprevention_claimedblocks_total%
